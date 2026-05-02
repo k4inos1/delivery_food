@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import './App.css';
+import Header from './components/Header';
+import HeroSection from './components/HeroSection';
+import Footer from './components/Footer';
 
 interface Product {
   id: number;
@@ -110,24 +113,12 @@ function App() {
 
   return (
     <div className="app-container">
-      <header className="header">
-        <div className="header-content">
-          <h1 className="logo">🍕 Sabor a Casa</h1>
-          <button className="cart-toggle-btn" onClick={() => setIsCartOpen(true)}>
-            🛒 <span className="cart-badge">{cartItemCount}</span>
-          </button>
-        </div>
-      </header>
+      <Header cartItemCount={cartItemCount} onCartOpen={() => setIsCartOpen(true)} />
 
       <main>
-        <section className="hero">
-          <div className="hero-text">
-            <h2>Comida deliciosa, directo a tu puerta</h2>
-            <p>Haz tu pedido rápido y fácil. Paga con Transbank o Efectivo al recibir.</p>
-          </div>
-        </section>
+        <HeroSection />
 
-        <section className="menu-section">
+        <section className="menu-section" id="menu">
           <h2 className="section-title">Nuestro Menú</h2>
           <div className="product-grid">
             {PRODUCTS.map(product => (
@@ -231,6 +222,8 @@ function App() {
           </form>
         </div>
       </aside>
+
+      <Footer />
     </div>
   );
 }
