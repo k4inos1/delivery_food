@@ -1,0 +1,45 @@
+name: Frontend CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build-and-lint:
+    name: Build and Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Linting
+        run: npm run lint
+
+      - name: Type checking and Build
+        run: npm run build
+
+  notify-deploy:
+    name: Notify Deploy Status
+    runs-on: ubuntu-latest
+    needs: build-and-lint
+    if: github.event_name == 'push'
+    steps:
+      - name: Deploy Status
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "✅ Frontend CI passed → Vercel auto-deploying to PRODUCTION"
+          else
+            echo "✅ Frontend CI passed → Vercel auto-deploying PREVIEW for develop branch"
+          fi
