@@ -1,48 +1,11 @@
 import { useState } from 'react';
 import './App.css';
-
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-}
+import ProductList from './components/ProductList';
+import type { Product } from './data/products';
 
 interface CartItem extends Product {
   quantity: number;
 }
-
-const PRODUCTS: Product[] = [
-  {
-    id: 1,
-    name: "Pizza Margarita",
-    description: "Salsa de tomate, mozzarella fresca y albahaca.",
-    price: 8500,
-    image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=500&q=80"
-  },
-  {
-    id: 2,
-    name: "Hamburguesa Clásica",
-    description: "Doble carne, queso cheddar, lechuga, tomate y salsa especial.",
-    price: 6900,
-    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&q=80"
-  },
-  {
-    id: 3,
-    name: "Sushi Roll",
-    description: "Roll tempura de camarón, palta y queso crema.",
-    price: 7500,
-    image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=500&q=80"
-  },
-  {
-    id: 4,
-    name: "Papas Fritas XL",
-    description: "Porción grande de papas fritas con salsa de queso y tocino.",
-    price: 4500,
-    image: "https://images.unsplash.com/photo-1576107232684-1279f390859f?w=500&q=80"
-  }
-];
 
 const WHATSAPP_NUMBER = "56978022258";
 
@@ -127,24 +90,7 @@ function App() {
           </div>
         </section>
 
-        <section className="menu-section">
-          <h2 className="section-title">Nuestro Menú</h2>
-          <div className="product-grid">
-            {PRODUCTS.map(product => (
-              <div key={product.id} className="product-card">
-                <img src={product.image} alt={product.name} className="product-image" />
-                <div className="product-info">
-                  <h3 className="product-name">{product.name}</h3>
-                  <p className="product-desc">{product.description}</p>
-                  <div className="product-footer">
-                    <span className="product-price">{formatMoney(product.price)}</span>
-                    <button className="add-btn" onClick={() => addToCart(product)}>Agregar</button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        <ProductList onAddToCart={addToCart} formatMoney={formatMoney} />
       </main>
 
       {/* Cart Overlay */}
