@@ -29,3 +29,29 @@ body {
 h1, h2, h3, h4, h5, h6 {
     color: var(--secondary-color);
 }
+
+.location-btn {
+    background-color: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+}
+
+.location-btn:hover {
+    background-color: var(--bg-color);
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.location-btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}

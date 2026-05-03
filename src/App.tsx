@@ -11,7 +11,7 @@ interface CartItem extends Product {
   quantity: number;
 }
 
-const WHATSAPP_NUMBER = "56978022258";
+const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_BUSINESS_NUMBER || "56900000000";
 
 function App() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -20,6 +20,8 @@ function App() {
   const [customerName, setCustomerName] = useState("");
   const [customerAddress, setCustomerAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
+
+  const [customerLocation, setCustomerLocation] = useState<string | null>(null);
 
   useEffect(() => {
     fetchProducts().then(setProducts).catch(console.error);
@@ -54,6 +56,26 @@ function App() {
     });
   };
 
+  const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      alert('Tu navegador no soporta geolocalización');
+      return;
+    }
+    
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        setCustomerLocation(`${lat},${lng}`);
+        alert('¡Ubicación obtenida con éxito!');
+      },
+      (error) => {
+        console.error('Error getting location', error);
+        alert('No se pudo obtener la ubicación. Por favor, asegúrate de dar los permisos necesarios.');
+      }
+    );
+  };
+
   const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -70,6 +92,18 @@ function App() {
     orderText += `%0A*Datos del cliente:*%0A`;
     orderText += `Nombre: ${customerName}%0A`;
     orderText += `Dirección: ${customerAddress}%0A`;
+    
+    let mapsLink = '';
+    if (customerLocation) {
+      mapsLink = `https://www.google.com/maps?q=${customerLocation}`;
+    } else if (customerAddress) {
+      mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(customerAddress)}`;
+    }
+    
+    if (mapsLink) {
+      orderText += `Ubicación en mapa: ${mapsLink}%0A`;
+    }
+
     orderText += `Método de pago: ${paymentMethod}%0A`;
     
     if (paymentMethod.includes('Transbank')) {
@@ -158,14 +192,30 @@ function App() {
             </div>
             <div className="form-group">
               <label htmlFor="address">Dirección de entrega</label>
-              <input 
-                type="text" 
-                id="address" 
-                required 
-                placeholder="Calle 123, Depto 4B"
-                value={customerAddress}
-                onChange={e => setCustomerAddress(e.target.value)}
-              />
+              <div className="address-input-group" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <input 
+                  type="text" 
+                  id="address" 
+                  required={!customerLocation}
+                  placeholder="Calle 123, Depto 4B"
+                  value={customerAddress}
+                  onChange={e => setCustomerAddress(e.target.value)}
+                  style={{ flex: 1 }}
+                />
+                <button 
+                  type="button" 
+                  className="location-btn"
+                  onClick={handleGetLocation}
+                  title="Obtener ubicación actual"
+                >
+                  📍
+                </button>
+              </div>
+              {customerLocation && (
+                <small className="location-success" style={{ color: '#28a745', marginTop: '4px', display: 'block' }}>
+                  ✓ Ubicación obtenida correctamente
+                </small>
+              )}
             </div>
             <div className="form-group">
               <label htmlFor="payment">Método de pago</label>
