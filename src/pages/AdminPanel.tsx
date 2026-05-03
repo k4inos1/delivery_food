@@ -35,19 +35,15 @@ function AdminPanel() {
   }, []);
 
   const loadProducts = useCallback(() => {
-    setLoading(true);
-    fetchProducts()
+    return fetchProducts()
       .then(data => setProducts(data))
       .catch(() => showNotification('Error al cargar los productos.', 'error'))
       .finally(() => setLoading(false));
   }, [showNotification]);
 
   useEffect(() => {
-    fetchProducts()
-      .then(data => setProducts(data))
-      .catch(() => showNotification('Error al cargar los productos.', 'error'))
-      .finally(() => setLoading(false));
-  }, [showNotification]);
+    loadProducts();
+  }, [loadProducts]);
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormState(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -91,6 +87,7 @@ function AdminPanel() {
         showNotification('Producto creado exitosamente.', 'success');
       }
       handleCancel();
+      setLoading(true);
       await loadProducts();
     } catch {
       showNotification('Error al guardar el producto.', 'error');
@@ -105,6 +102,7 @@ function AdminPanel() {
     try {
       await deleteProduct(id);
       showNotification('Producto eliminado exitosamente.', 'success');
+      setLoading(true);
       await loadProducts();
     } catch {
       showNotification('Error al eliminar el producto.', 'error');

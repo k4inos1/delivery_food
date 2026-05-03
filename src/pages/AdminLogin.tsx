@@ -3,11 +3,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import './AdminLogin.css';
 
-interface AdminLoginProps {
-  onLoginSuccess: () => void;
-}
-
-function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
+function AdminLogin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -20,7 +16,7 @@ function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      onLoginSuccess();
+      // AdminRoute listens to onAuthStateChanged and will re-render on successful login
     } catch {
       setError('Credenciales inválidas. Por favor, inténtalo de nuevo.');
     } finally {

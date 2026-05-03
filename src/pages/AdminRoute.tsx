@@ -25,7 +25,7 @@ function AdminRoute() {
   }
 
   if (!user) {
-    return <AdminLogin onLoginSuccess={() => {}} />;
+    return <AdminLogin />;
   }
 
   return <AdminPanel />;
