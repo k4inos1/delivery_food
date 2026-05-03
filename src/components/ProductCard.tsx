@@ -1,5 +1,5 @@
 import './ProductCard.css';
-import type { Product } from '../data/products';
+import type { Product } from '../data/productsService';
 
 interface ProductCardProps {
   product: Product;
@@ -12,7 +12,7 @@ export default function ProductCard({ product, onAddToCart, formatMoney }: Produ
     <div className="product-card">
       <div className="product-card__image-wrapper">
         <img
-          src={product.image}
+          src={product.imageUrl}
           alt={product.name}
           className="product-card__image"
         />

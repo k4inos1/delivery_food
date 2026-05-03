@@ -1,4 +1,4 @@
-ah/* App.css */
+/* App.css */
 .app-container {
   display: flex;
   flex-direction: column;
@@ -271,9 +271,6 @@ ah/* App.css */
 }
 
 @media (max-width: 768px) {
-  .hero-text h2 {
-    font-size: 2rem;
-  }
   .cart-sidebar {
     max-width: 100%;
   }
