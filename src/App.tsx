@@ -44,7 +44,7 @@ function App() {
     setIsCartOpen(true);
   };
 
-  const removeFromCart = (productId: number) => {
+  const removeFromCart = (productId: string) => {
     setCart(prevCart => {
       const existing = prevCart.find(item => item.id === productId);
       if (existing && existing.quantity > 1) {
