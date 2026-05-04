@@ -82,16 +82,25 @@ function App() {
     e.preventDefault();
     if (cart.length === 0) return;
 
-    let orderText = `*¡Hola! Quiero hacer un pedido:*%0A%0A`;
+    // Greeting and introductory text
+    let orderText = `*¡Hola! 👋 Me gustaría realizar el siguiente pedido:*%0A%0A`;
+    
+    // Order Items
+    orderText += `🛍️ *MI ORDEN:*%0A`;
     cart.forEach(item => {
-      orderText += `- ${item.quantity}x ${item.name} (${formatMoney(item.price * item.quantity)})%0A`;
+      orderText += `▪️ ${item.quantity}x ${item.name} (${formatMoney(item.price * item.quantity)})%0A`;
     });
     
-    orderText += `%0A*Total: ${formatMoney(cartTotal)}*%0A`;
-    orderText += `%0A*Datos del cliente:*%0A`;
-    orderText += `Nombre: ${customerName}%0A`;
-    orderText += `Dirección: ${customerAddress}%0A`;
+    // Order Total
+    orderText += `%0A💰 *Total a pagar: ${formatMoney(cartTotal)}*%0A`;
+    orderText += `➖➖➖➖➖➖➖➖➖➖%0A`;
+
+    // Customer Data
+    orderText += `%0A👤 *DATOS DEL CLIENTE:*%0A`;
+    orderText += `*Nombre:* ${customerName}%0A`;
+    orderText += `*Dirección:* ${customerAddress}%0A`;
     
+    // Maps Link
     let mapsLink = '';
     if (customerLocation) {
       mapsLink = `https://www.google.com/maps?q=${customerLocation}`;
@@ -100,14 +109,22 @@ function App() {
     }
     
     if (mapsLink) {
-      orderText += `Ubicación en mapa: ${mapsLink}%0A`;
+      orderText += `*📍 Ubicación GPS:* ${mapsLink}%0A`;
     }
 
-    orderText += `Método de pago: ${paymentMethod}%0A`;
+    // Payment Info
+    orderText += `%0A💳 *MÉTODO DE PAGO:*%0A`;
+    orderText += `*Selección:* ${paymentMethod}%0A`;
     
     if (paymentMethod.includes('Transbank')) {
-      orderText += `%0A_Quedo atento al link de pago._`;
+      orderText += `%0A_Quedo atento/a al link de pago seguro._ 🔗`;
+    } else if (paymentMethod.includes('Efectivo')) {
+      orderText += `%0A_Llevaré el monto en efectivo, por favor traigan vuelto por si acaso._ 💵`;
+    } else if (paymentMethod.includes('Transferencia')) {
+      orderText += `%0A_Por favor, envíenme los datos bancarios para transferir._ 🏦`;
     }
+
+    orderText += `%0A%0A_¡Muchas gracias!_ ✨`;
 
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${orderText}`;
     window.open(whatsappUrl, '_blank');
