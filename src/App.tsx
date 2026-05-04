@@ -4,8 +4,7 @@ import { fetchProducts, type Product } from './data/productsService';
 import Header from './components/Header';
 import HeroSection from './components/HeroSection';
 import Footer from './components/Footer';
-
-
+import ProductList from './components/ProductList';
 
 interface CartItem extends Product {
   quantity: number;
@@ -121,24 +120,7 @@ function App() {
       <main>
         <HeroSection />
 
-        <section className="menu-section" id="menu">
-          <h2 className="section-title">Nuestro Menú</h2>
-          <div className="product-grid">
-            {products.map(product => (
-              <div key={product.id} className="product-card">
-                <img src={product.imageUrl} alt={product.name} className="product-image" />
-                <div className="product-info">
-                  <h3 className="product-name">{product.name}</h3>
-                  <p className="product-desc">{product.description}</p>
-                  <div className="product-footer">
-                    <span className="product-price">{formatMoney(product.price)}</span>
-                    <button className="add-btn" onClick={() => addToCart(product)}>Agregar</button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        <ProductList products={products} onAddToCart={addToCart} formatMoney={formatMoney} />
       </main>
 
       {/* Cart Overlay */}
