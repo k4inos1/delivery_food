@@ -22,6 +22,9 @@ function App() {
 
   const [customerLocation, setCustomerLocation] = useState<string | null>(null);
 
+  const [orderHistory, setOrderHistory] = useState<any[]>(() => JSON.parse(localStorage.getItem('orderHistory') || '[]'));
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+
   useEffect(() => {
     fetchProducts().then(setProducts).catch(console.error);
   }, []);
@@ -126,6 +129,17 @@ function App() {
 
     orderText += `%0A%0A_¡Muchas gracias!_ ✨`;
 
+    const newOrder = {
+      date: new Date().toISOString(),
+      items: cart,
+      total: cartTotal,
+      paymentMethod
+    };
+    const newHistory = [newOrder, ...orderHistory];
+    setOrderHistory(newHistory);
+    localStorage.setItem('orderHistory', JSON.stringify(newHistory));
+    setCart([]); // Clear cart after order
+
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${orderText}`;
     window.open(whatsappUrl, '_blank');
   };
@@ -147,7 +161,10 @@ function App() {
       <aside className={`cart-sidebar ${isCartOpen ? 'open' : ''}`}>
         <div className="cart-header">
           <h2>Tu Pedido</h2>
-          <button className="close-cart" onClick={() => setIsCartOpen(false)}>&times;</button>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button className="history-btn" onClick={() => setIsHistoryOpen(true)} title="Ver Historial">📜</button>
+            <button className="close-cart" onClick={() => setIsCartOpen(false)}>&times;</button>
+          </div>
         </div>
         
         <div className="cart-items">
@@ -238,6 +255,41 @@ function App() {
               Enviar pedido por WhatsApp 📲
             </button>
           </form>
+        </div>
+      </aside>
+
+      {/* Order History Overlay */}
+      <div className={`cart-overlay ${isHistoryOpen ? 'open' : ''}`} onClick={() => setIsHistoryOpen(false)} style={{ zIndex: 1001 }}></div>
+      
+      {/* Order History Sidebar */}
+      <aside className={`cart-sidebar ${isHistoryOpen ? 'open' : ''}`} style={{ zIndex: 1002 }}>
+        <div className="cart-header">
+          <h2>Mis Pedidos</h2>
+          <button className="close-cart" onClick={() => setIsHistoryOpen(false)}>&times;</button>
+        </div>
+        
+        <div className="cart-items" style={{ padding: '1rem' }}>
+          {orderHistory.length === 0 ? (
+            <p className="empty-cart">Aún no has realizado pedidos.</p>
+          ) : (
+            orderHistory.map((order, idx) => (
+              <div key={idx} style={{ borderBottom: '1px solid #eee', paddingBottom: '1rem', marginBottom: '1rem' }}>
+                <p style={{ fontSize: '0.8rem', color: '#666', marginBottom: '0.5rem' }}>
+                  {new Date(order.date).toLocaleString('es-CL')}
+                </p>
+                {order.items.map((item: any, i: number) => (
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', marginBottom: '0.2rem' }}>
+                    <span>{item.quantity}x {item.name}</span>
+                    <span>{formatMoney(item.price * item.quantity)}</span>
+                  </div>
+                ))}
+                <div style={{ marginTop: '0.5rem', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' }}>
+                  <span>Total:</span>
+                  <span>{formatMoney(order.total)}</span>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </aside>
 
