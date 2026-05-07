@@ -56,7 +56,7 @@ function AdminLogin() {
         <div className="login-header">
           <span className="login-logo">🍕</span>
           <h1>Panel de Administración</h1>
-          <p>Accede con Google o con Email/Password habilitado en Firebase Auth.</p>
+          <p>Inicia sesión con tu cuenta de administrador.</p>
         </div>
 
         <button type="button" className="login-google-btn" onClick={handleGoogleLogin} disabled={googleLoading || loading}>
