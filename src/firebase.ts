@@ -30,8 +30,17 @@ const firebaseConfig = {
 };
 
 const requiredFirebaseKeys = Object.values(envFirebaseConfig);
+const invalidFirebaseValues = new Set([
+  ...Object.values(fallbackFirebaseConfig),
+  'your_api_key',
+  'your_project.firebaseapp.com',
+  'your_project_id',
+  'your_project.firebasestorage.app',
+  'your_messaging_sender_id',
+  'your_app_id',
+]);
 
-export const isFirebaseConfigured = requiredFirebaseKeys.every(Boolean);
+export const isFirebaseConfigured = requiredFirebaseKeys.every(value => Boolean(value) && !invalidFirebaseValues.has(value));
 
 const app = initializeApp(firebaseConfig);
 

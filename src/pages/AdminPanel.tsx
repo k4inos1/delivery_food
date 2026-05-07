@@ -122,7 +122,9 @@ function AdminPanel({ user }: AdminPanelProps) {
   const formatMoney = (amount: number) =>
     new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(amount);
 
-  const userName = user.displayName?.trim() || user.email?.trim() || 'Administrador';
+  const displayName = user.displayName?.trim();
+  const email = user.email?.trim();
+  const userName = displayName || email || 'Administrador';
   const avatarLetter = userName.charAt(0).toUpperCase();
 
   return (
@@ -145,7 +147,7 @@ function AdminPanel({ user }: AdminPanelProps) {
               )}
               <div className="admin-user-meta">
                 <strong>{userName}</strong>
-                {user.email && <span>{user.email}</span>}
+                {email && <span>{email}</span>}
               </div>
             </div>
             <button className="admin-logout-btn" onClick={handleLogout}>
