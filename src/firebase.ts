@@ -35,6 +35,8 @@ const invalidFirebaseValues = new Set([
   'your_api_key',
   'your_project.firebaseapp.com',
   'your_project_id',
+  'your_storage_bucket',
+  'your_project.appspot.com',
   'your_project.firebasestorage.app',
   'your_messaging_sender_id',
   'your_app_id',
