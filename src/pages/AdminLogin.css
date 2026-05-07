@@ -39,6 +39,50 @@
   font-size: 0.95rem;
 }
 
+.login-google-btn {
+  width: 100%;
+  border: 1px solid var(--border-color);
+  background-color: #fff;
+  color: var(--secondary-color);
+  padding: 0.95rem 1rem;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.1s;
+}
+
+.login-google-btn:hover:not(:disabled) {
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.login-google-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.login-google-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.25rem 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: var(--border-color);
+}
+
 .login-form {
   display: flex;
   flex-direction: column;

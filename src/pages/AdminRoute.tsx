@@ -28,7 +28,7 @@ function AdminRoute() {
     return <AdminLogin />;
   }
 
-  return <AdminPanel />;
+  return <AdminPanel user={user} />;
 }
 
 export default AdminRoute;
