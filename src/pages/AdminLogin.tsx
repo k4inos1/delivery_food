@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase';
+import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { auth, googleProvider, isFirebaseConfigured } from '../firebase';
 import './AdminLogin.css';
 
 function AdminLogin() {
@@ -8,10 +8,17 @@ function AdminLogin() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (!isFirebaseConfigured) {
+      setError('Configura las variables de entorno de Firebase antes de iniciar sesión.');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -24,13 +31,40 @@ function AdminLogin() {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    setError('');
+
+    if (!isFirebaseConfigured) {
+      setError('Configura las variables de entorno de Firebase antes de iniciar sesión.');
+      return;
+    }
+
+    setGoogleLoading(true);
+
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch {
+      setError('No fue posible iniciar sesión con Google. Por favor, inténtalo de nuevo.');
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
+
   return (
     <div className="login-page">
       <div className="login-card">
         <div className="login-header">
           <span className="login-logo">🍕</span>
           <h1>Panel de Administración</h1>
-          <p>Sabor a Casa</p>
+          <p>Inicia sesión con tu cuenta de administrador.</p>
+        </div>
+
+        <button type="button" className="login-google-btn" onClick={handleGoogleLogin} disabled={googleLoading || loading}>
+          {googleLoading ? 'Conectando con Google...' : 'Continuar con Google'}
+        </button>
+
+        <div className="login-divider" aria-hidden="true">
+          <span>o</span>
         </div>
 
         <form className="login-form" onSubmit={handleSubmit}>
@@ -63,7 +97,7 @@ function AdminLogin() {
           {error && <p className="login-error">{error}</p>}
 
           <button type="submit" className="login-btn" disabled={loading}>
-            {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+            {loading ? 'Iniciando sesión...' : 'Iniciar sesión con correo'}
           </button>
         </form>
       </div>

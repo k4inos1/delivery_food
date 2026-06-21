@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { signOut } from 'firebase/auth';
+import { signOut, type User } from 'firebase/auth';
 import { auth } from '../firebase';
 import {
   fetchProducts,
@@ -20,7 +20,11 @@ const EMPTY_FORM = {
 
 type FormState = typeof EMPTY_FORM;
 
-function AdminPanel() {
+interface AdminPanelProps {
+  user: User;
+}
+
+function AdminPanel({ user }: AdminPanelProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [formState, setFormState] = useState<FormState>(EMPTY_FORM);
@@ -118,6 +122,11 @@ function AdminPanel() {
   const formatMoney = (amount: number) =>
     new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(amount);
 
+  const displayName = user.displayName?.trim();
+  const email = user.email?.trim();
+  const userName = displayName || email || 'Administrador';
+  const avatarLetter = userName.charAt(0).toUpperCase();
+
   return (
     <div className="admin-page">
       {/* Admin Navbar */}
@@ -127,9 +136,24 @@ function AdminPanel() {
             <span>🍕</span>
             <span>Sabor a Casa — Admin</span>
           </div>
-          <button className="admin-logout-btn" onClick={handleLogout}>
-            Cerrar sesión
-          </button>
+          <div className="admin-navbar-actions">
+            <div className="admin-user-chip">
+              {user.photoURL ? (
+                <img src={user.photoURL} alt={userName} className="admin-user-avatar" referrerPolicy="no-referrer" />
+              ) : (
+                <span className="admin-user-avatar admin-user-avatar--fallback" aria-hidden="true">
+                  {avatarLetter}
+                </span>
+              )}
+              <div className="admin-user-meta">
+                <strong>{userName}</strong>
+                {email && <span>{email}</span>}
+              </div>
+            </div>
+            <button className="admin-logout-btn" onClick={handleLogout}>
+              Cerrar sesión
+            </button>
+          </div>
         </div>
       </header>
 
