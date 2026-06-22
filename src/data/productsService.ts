@@ -2,6 +2,9 @@ import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase
 import { db, isFirebaseConfigured } from '../firebase';
 import productsData from './products.json';
 
+const fallbackProducts = productsData as any[];
+
+
 export interface Product {
   id: string;
   name: string;
@@ -18,14 +21,14 @@ export interface Product {
  */
 export async function fetchProducts(): Promise<Product[]> {
   if (!isFirebaseConfigured) {
-    return productsData.map(p => ({ ...p, id: String(p.id) }));
+    return fallbackProducts.map(p => ({ ...p, id: String(p.id) }));
   }
 
   try {
     const querySnapshot = await getDocs(collection(db, 'products'));
     if (querySnapshot.empty) {
       // Fall back to local data if the collection is empty
-      return productsData.map(p => ({ ...p, id: String(p.id) }));
+      return fallbackProducts.map(p => ({ ...p, id: String(p.id) }));
     }
     return querySnapshot.docs.map(docSnap => ({
       id: docSnap.id,
@@ -33,7 +36,7 @@ export async function fetchProducts(): Promise<Product[]> {
     })) as Product[];
   } catch {
     // Fall back to local data when Firebase is not yet configured
-    return productsData.map(p => ({ ...p, id: String(p.id) }));
+    return fallbackProducts.map(p => ({ ...p, id: String(p.id) }));
   }
 }
 
